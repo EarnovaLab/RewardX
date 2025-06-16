@@ -16,20 +16,19 @@
     body {
       background: linear-gradient(to bottom right, #0a0a23, #1f1f3d);
       color: white;
+      min-height: 100vh;
       overflow: hidden;
-      height: 100vh;
     }
 
-    /* Logo animation */
     #logo-anim {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: rotate 3s linear forwards;
+      animation: fadeOut 7s forwards;
       z-index: 10;
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       background: rgba(255, 215, 0, 0.1);
       display: flex;
@@ -38,27 +37,28 @@
     }
 
     #logo-anim img {
-      width: 80px;
-      animation: spin 3s linear;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      animation: slowSpin 7s linear;
     }
 
-    @keyframes spin {
+    @keyframes slowSpin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    @keyframes rotate {
+    @keyframes fadeOut {
       0% { opacity: 1; }
       100% { opacity: 0; visibility: hidden; }
     }
 
-    /* Navbar */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 20px;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0, 0, 0, 0.2);
       position: fixed;
       width: 100%;
       top: 0;
@@ -67,6 +67,7 @@
 
     .nav-logo img {
       height: 40px;
+      border-radius: 50%;
     }
 
     .wallet-btn {
@@ -83,17 +84,38 @@
       background-color: #9d6eff;
     }
 
-    /* Main Content (after animation disappears) */
     #main-content {
       display: none;
       padding-top: 80px;
       text-align: center;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      #logo-anim {
+        width: 120px;
+        height: 120px;
+      }
+
+      #logo-anim img {
+        width: 70px;
+        height: 70px;
+      }
+
+      .nav-logo img {
+        height: 30px;
+      }
+
+      .wallet-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Landing Logo Animation -->
+  <!-- Landing Animation -->
   <div id="logo-anim">
     <img src="RWX-logo.png" alt="RWX Logo" />
   </div>
@@ -113,13 +135,12 @@
   </div>
 
   <script>
-    // Hide logo animation after 3.5 seconds and show main content
+    // After 7s hide logo and show content
     setTimeout(() => {
       document.getElementById("logo-anim").style.display = "none";
       document.getElementById("main-content").style.display = "block";
-    }, 3500);
+    }, 7000);
 
-    // Wallet Connect Logic
     async function connectWallet() {
       if (window.ethereum) {
         try {
