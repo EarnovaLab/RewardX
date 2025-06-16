@@ -3,126 +3,142 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RWX Earn Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <title>RewardX Token | Earnova Labs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
       font-family: 'Montserrat', sans-serif;
+      box-sizing: border-box;
     }
 
     body {
-      background: linear-gradient(to bottom right, #0a0a23, #1f1f3d);
-      color: white;
-      min-height: 100vh;
-      overflow: hidden;
+      background: #0d1117;
+      color: #fff;
     }
 
-    #logo-anim {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: fadeOut 7s forwards;
-      z-index: 10;
-      width: 160px;
-      height: 160px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #logo-anim img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      animation: slowSpin 7s linear;
-    }
-
-    @keyframes slowSpin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; visibility: hidden; }
-    }
-
-    nav {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      background: rgba(0, 0, 0, 0.2);
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 5;
+      padding: 15px 25px;
+      background: #161b22;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    .nav-logo img {
-      height: 40px;
+    .logo {
       width: 40px;
+      height: 40px;
       border-radius: 50%;
-      object-fit: cover;
     }
 
     .wallet-btn {
       background-color: #8247e5;
       color: white;
+      padding: 8px 14px;
       border: none;
-      padding: 8px 16px;
-      border-radius: 12px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: bold;
     }
 
-    .wallet-btn:hover {
-      background-color: #9d6eff;
-    }
-
-    #main-content {
-      display: none;
-      padding-top: 80px;
+    .hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
       text-align: center;
       padding: 20px;
     }
 
+    .rotating-logo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      animation: spin 7s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hide-after {
+      animation: fadeOut 1s ease-in-out forwards;
+      animation-delay: 7s;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    .contract-box {
+      background-color: #1f2937;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+
+    .buy-button {
+      background-color: #00c853;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .description {
+      max-width: 600px;
+      margin: auto;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
     @media (max-width: 600px) {
-      #logo-anim {
+      .rotating-logo {
         width: 120px;
         height: 120px;
       }
-
-      #logo-anim img {
-        width: 100%;
-        height: 100%;
-      }
-
-      .nav-logo img {
-        height: 30px;
+      .logo {
         width: 30px;
-      }
-
-      .wallet-btn {
-        padding: 6px 12px;
-        font-size: 14px;
+        height: 30px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Landing Animation -->
-  <div id="logo-anim">
-    <img src="RWX-logo.png" alt="RWX Logo" />
-  </div>
+  <header>
+    <img src="RWX-logo.png" alt="RWX" class="logo">
+    <button class="wallet-btn">Connect Wallet</button>
+  </header>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="nav-logo">
-      <img src="RWX-log
+  <main class="hero">
+    <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo hide-after" />
+    <h1 style="color: #00e676; margin-bottom: 10px;">RWX Token</h1>
+    <div class="contract-box">
+      0x5bA35e1D0885fD95d821a4aee30643930110b28d
+    </div>
+    <button class="buy-button">Buy Now</button>
+    <p class="description">
+      Earnova Labs is a futuristic Web3 ecosystem where users can earn rewards through the RWX token — via staking, referrals, SIP system, and community building. The RWX token is deployed on the secure and scalable Polygon blockchain. It is designed to be decentralized, youth-friendly, and future-ready.
+    </p>
+  </main>
+
+</body>
+</html>
