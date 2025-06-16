@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RWX Earn Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
     }
 
     body {
@@ -29,17 +29,16 @@
       z-index: 10;
       width: 160px;
       height: 160px;
-      border-radius: 50%;
-      background: rgba(255, 215, 0, 0.1);
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
     #logo-anim img {
-      width: 90px;
-      height: 90px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
+      object-fit: cover;
       animation: slowSpin 7s linear;
     }
 
@@ -67,7 +66,9 @@
 
     .nav-logo img {
       height: 40px;
+      width: 40px;
       border-radius: 50%;
+      object-fit: cover;
     }
 
     .wallet-btn {
@@ -98,12 +99,13 @@
       }
 
       #logo-anim img {
-        width: 70px;
-        height: 70px;
+        width: 100%;
+        height: 100%;
       }
 
       .nav-logo img {
         height: 30px;
+        width: 30px;
       }
 
       .wallet-btn {
@@ -123,37 +125,4 @@
   <!-- Navbar -->
   <nav>
     <div class="nav-logo">
-      <img src="RWX-logo.png" alt="RWX Logo" />
-    </div>
-    <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
-  </nav>
-
-  <!-- Main Content -->
-  <div id="main-content">
-    <h1>Welcome to RWX Earnings Dashboard</h1>
-    <p>Start SIP, Staking and Referral journey here.</p>
-  </div>
-
-  <script>
-    // After 7s hide logo and show content
-    setTimeout(() => {
-      document.getElementById("logo-anim").style.display = "none";
-      document.getElementById("main-content").style.display = "block";
-    }, 7000);
-
-    async function connectWallet() {
-      if (window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const userAddress = accounts[0];
-          document.querySelector('.wallet-btn').innerText = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-        } catch (error) {
-          alert("Connection rejected.");
-        }
-      } else {
-        alert("Please install MetaMask or Web3 wallet.");
-      }
-    }
-  </script>
-</body>
-</html>
+      <img src="RWX-log
