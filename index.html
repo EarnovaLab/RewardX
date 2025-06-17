@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RWX Token | Earnova Labs</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -65,6 +66,17 @@
       font-weight: bold;
     }
 
+    .info-box {
+      display: none;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .info-box p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
     @media (max-width: 600px) {
       .rotating-logo {
         width: 120px;
@@ -80,20 +92,90 @@
 </head>
 <body>
 
-  <!-- Navbar (hidden initially) -->
+  <!-- Navbar -->
   <header class="navbar" id="navbar">
     <img src="RWX-logo.png" alt="RWX" class="logo">
-    <button class="wallet-btn">Connect Wallet</button>
+    <button class="wallet-btn" id="walletButton" onclick="handleWallet()">
+      Connect Wallet
+    </button>
   </header>
 
-  <!-- Centered rotating logo -->
+  <!-- Rotating Logo -->
   <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo" id="logo" />
 
+  <!-- User Info -->
+  <div class="info-box" id="walletInfo">
+    <p><strong>Wallet:</strong> <span id="userAddress">Not connected</span></p>
+    <p><strong>Polygon (MATIC):</strong> <span id="maticBalance">--</span></p>
+    <p><strong>RWX Token:</strong> <span id="rwxBalance">--</span></p>
+  </div>
+
   <script>
-    // Show navbar after 7 seconds
+    const RWX_TOKEN_ADDRESS = "0x5bA35e1D0885fD95d821a4aee30643930110b28d";
+    const RWX_TOKEN_DECIMALS = 18;
+    const ERC20_ABI = [
+      "function balanceOf(address) view returns (uint256)",
+      "function decimals() view returns (uint8)"
+    ];
+
+    let provider, signer, connected = false;
+
+    // After 7 sec: remove logo & show navbar
     setTimeout(() => {
+      document.getElementById('logo').style.display = 'none';
       document.getElementById('navbar').style.display = 'flex';
     }, 7000);
+
+    async function handleWallet() {
+      if (!connected) {
+        await connectWallet();
+      } else {
+        disconnectWallet();
+      }
+    }
+
+    async function connectWallet() {
+      if (typeof window.ethereum === 'undefined') {
+        alert("Please install MetaMask!");
+        return;
+      }
+
+      try {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        document.getElementById('userAddress').innerText = address;
+
+        // Show wallet info
+        document.getElementById('walletInfo').style.display = 'block';
+
+        // Show MATIC balance
+        const maticBal = await provider.getBalance(address);
+        document.getElementById('maticBalance').innerText = (ethers.formatEther(maticBal)).slice(0, 8) + " MATIC";
+
+        // RWX Token balance
+        const token = new ethers.Contract(RWX_TOKEN_ADDRESS, ERC20_ABI, provider);
+        const tokenBal = await token.balanceOf(address);
+        document.getElementById('rwxBalance').innerText = (ethers.formatUnits(tokenBal, RWX_TOKEN_DECIMALS)).slice(0, 8) + " RWX";
+
+        // Change button to disconnect
+        document.getElementById('walletButton').innerText = "Disconnect Wallet";
+        connected = true;
+
+      } catch (err) {
+        console.error(err);
+        alert("Wallet connection failed!");
+      }
+    }
+
+    function disconnectWallet() {
+      document.getElementById('userAddress').innerText = "Not connected";
+      document.getElementById('maticBalance').innerText = "--";
+      document.getElementById('rwxBalance').innerText = "--";
+      document.getElementById('walletInfo').style.display = 'none';
+      document.getElementById('walletButton').innerText = "Connect Wallet";
+      connected = false;
+    }
   </script>
 
 </body>
