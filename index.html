@@ -18,11 +18,16 @@
       background: #0d1117;
       color: white;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    .center-screen {
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      overflow: hidden;
+      transition: all 0.5s ease;
     }
 
     .rotating-logo {
@@ -37,145 +42,116 @@
       to { transform: rotate(360deg); }
     }
 
-    .navbar {
+    .token-title {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    .wallet-btn {
+      margin-top: 20px;
+      background-color: #8247e5;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .topbar {
       display: none;
       width: 100%;
+      background: #161b22;
+      padding: 15px 20px;
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 25px;
-      background: #161b22;
       position: fixed;
       top: 0;
       left: 0;
       z-index: 10;
     }
 
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+    .wallet-address {
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+      white-space: nowrap;
     }
 
-    .wallet-btn {
-      background-color: #8247e5;
+    .disconnect-btn {
+      background: #e84142;
       color: white;
-      padding: 8px 14px;
       border: none;
+      padding: 8px 14px;
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-    }
-
-    .info-box {
-      display: none;
-      text-align: center;
-      margin-top: 100px;
-    }
-
-    .info-box p {
-      margin: 8px 0;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     @media (max-width: 600px) {
-      .rotating-logo {
-        width: 120px;
-        height: 120px;
-      }
-
-      .logo {
-        width: 30px;
-        height: 30px;
-      }
+      .rotating-logo { width: 120px; height: 120px; }
+      .token-title { font-size: 20px; }
+      .wallet-btn { padding: 8px 14px; font-size: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <header class="navbar" id="navbar">
-    <img src="RWX-logo.png" alt="RWX" class="logo">
-    <button class="wallet-btn" id="walletButton" onclick="handleWallet()">
-      Connect Wallet
-    </button>
-  </header>
+  <!-- Logo Section -->
+  <div class="center-screen" id="introSection">
+    <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo" id="logo" />
+    <div class="token-title">RWX Token</div>
+    <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
 
-  <!-- Rotating Logo -->
-  <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo" id="logo" />
-
-  <!-- User Info -->
-  <div class="info-box" id="walletInfo">
-    <p><strong>Wallet:</strong> <span id="userAddress">Not connected</span></p>
-    <p><strong>Polygon (MATIC):</strong> <span id="maticBalance">--</span></p>
-    <p><strong>RWX Token:</strong> <span id="rwxBalance">--</span></p>
+  <!-- Topbar after connection -->
+  <div class="topbar" id="topbar">
+    <div class="wallet-address" id="walletAddress">0x...</div>
+    <button class="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
   </div>
 
   <script>
-    const RWX_TOKEN_ADDRESS = "0x5bA35e1D0885fD95d821a4aee30643930110b28d";
-    const RWX_TOKEN_DECIMALS = 18;
-    const ERC20_ABI = [
-      "function balanceOf(address) view returns (uint256)",
-      "function decimals() view returns (uint8)"
-    ];
-
-    let provider, signer, connected = false;
-
-    // After 7 sec: remove logo & show navbar
-    setTimeout(() => {
-      document.getElementById('logo').style.display = 'none';
-      document.getElementById('navbar').style.display = 'flex';
-    }, 7000);
-
-    async function handleWallet() {
-      if (!connected) {
-        await connectWallet();
-      } else {
-        disconnectWallet();
-      }
-    }
+    let provider, signer, address;
 
     async function connectWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert("Please install MetaMask!");
+        alert("MetaMask required!");
         return;
       }
 
       try {
         provider = new ethers.BrowserProvider(window.ethereum);
         signer = await provider.getSigner();
-        const address = await signer.getAddress();
-        document.getElementById('userAddress').innerText = address;
+        address = await signer.getAddress();
 
-        // Show wallet info
-        document.getElementById('walletInfo').style.display = 'block';
+        // Show address on topbar
+        document.getElementById('walletAddress').innerText = address;
+        document.getElementById('topbar').style.display = 'flex';
 
-        // Show MATIC balance
-        const maticBal = await provider.getBalance(address);
-        document.getElementById('maticBalance').innerText = (ethers.formatEther(maticBal)).slice(0, 8) + " MATIC";
-
-        // RWX Token balance
-        const token = new ethers.Contract(RWX_TOKEN_ADDRESS, ERC20_ABI, provider);
-        const tokenBal = await token.balanceOf(address);
-        document.getElementById('rwxBalance').innerText = (ethers.formatUnits(tokenBal, RWX_TOKEN_DECIMALS)).slice(0, 8) + " RWX";
-
-        // Change button to disconnect
-        document.getElementById('walletButton').innerText = "Disconnect Wallet";
-        connected = true;
+        // Hide intro section
+        document.getElementById('introSection').style.display = 'none';
 
       } catch (err) {
-        console.error(err);
         alert("Wallet connection failed!");
+        console.error(err);
       }
     }
 
     function disconnectWallet() {
-      document.getElementById('userAddress').innerText = "Not connected";
-      document.getElementById('maticBalance').innerText = "--";
-      document.getElementById('rwxBalance').innerText = "--";
-      document.getElementById('walletInfo').style.display = 'none';
-      document.getElementById('walletButton').innerText = "Connect Wallet";
-      connected = false;
+      // Reset all UI elements
+      document.getElementById('walletAddress').innerText = '';
+      document.getElementById('topbar').style.display = 'none';
+      document.getElementById('introSection').style.display = 'flex';
     }
+
+    // Auto remove logo after 7 sec
+    setTimeout(() => {
+      document.getElementById('logo').style.display = 'none';
+    }, 7000);
   </script>
 
 </body>
