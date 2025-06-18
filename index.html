@@ -27,14 +27,14 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      transition: all 0.5s ease;
+      transition: all 0.3s ease;
     }
 
     .rotating-logo {
       width: 160px;
       height: 160px;
       border-radius: 50%;
-      animation: spin 7s linear forwards;
+      animation: spin 4s linear infinite;
     }
 
     @keyframes spin {
@@ -57,27 +57,32 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .wallet-btn:hover {
+      background-color: #6a38c4;
     }
 
     .topbar {
       display: none;
       width: 100%;
       background: #161b22;
-      padding: 15px 20px;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 10;
+      z-index: 100;
     }
 
     .wallet-address {
       font-size: 14px;
+      max-width: 70%;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 70%;
       white-space: nowrap;
     }
 
@@ -90,6 +95,17 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .disconnect-btn:hover {
+      background: #c73032;
+    }
+
+    #mainContent {
+      display: none;
+      padding-top: 70px;
+      text-align: center;
     }
 
     @media (max-width: 600px) {
@@ -101,17 +117,23 @@
 </head>
 <body>
 
-  <!-- Logo Section -->
+  <!-- Wallet Topbar -->
+  <div class="topbar" id="topbar" style="display: none;">
+    <div class="wallet-address" id="walletAddress">0x...</div>
+    <button class="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
+  </div>
+
+  <!-- Initial Landing Page -->
   <div class="center-screen" id="introSection">
-    <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo" id="logo" />
+    <img src="RWX-logo.png" alt="RWX Logo" class="rotating-logo" />
     <div class="token-title">RWX Token</div>
     <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
   </div>
 
-  <!-- Topbar after connection -->
-  <div class="topbar" id="topbar">
-    <div class="wallet-address" id="walletAddress">0x...</div>
-    <button class="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
+  <!-- Main Page after connection -->
+  <div id="mainContent">
+    <h2>Welcome to Earnova Labs Dashboard</h2>
+    <p>More features will appear here after wallet connection.</p>
   </div>
 
   <script>
@@ -132,8 +154,9 @@
         document.getElementById('walletAddress').innerText = address;
         document.getElementById('topbar').style.display = 'flex';
 
-        // Hide intro section
+        // Hide intro and show dashboard
         document.getElementById('introSection').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
 
       } catch (err) {
         alert("Wallet connection failed!");
@@ -142,16 +165,12 @@
     }
 
     function disconnectWallet() {
-      // Reset all UI elements
+      // Reset UI
       document.getElementById('walletAddress').innerText = '';
       document.getElementById('topbar').style.display = 'none';
       document.getElementById('introSection').style.display = 'flex';
+      document.getElementById('mainContent').style.display = 'none';
     }
-
-    // Auto remove logo after 7 sec
-    setTimeout(() => {
-      document.getElementById('logo').style.display = 'none';
-    }, 7000);
   </script>
 
 </body>
